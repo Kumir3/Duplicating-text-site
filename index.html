@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RelayPost</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="auth-view" id="authView">
+        <div class="brand-panel">
+          <div class="brand-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <p class="eyebrow">RelayPost</p>
+          <h1>Один текст для всех ваших групп и каналов</h1>
+          <p class="brand-copy">
+            Подготовьте пост один раз, заморозьте отдельные приложения и адаптируйте
+            текст под Telegram, VK, MAX и другие площадки.
+          </p>
+          <div class="brand-stats" aria-label="Преимущества сервиса">
+            <div>
+              <strong>8</strong>
+              <span>каналов</span>
+            </div>
+            <div>
+              <strong>1</strong>
+              <span>черновик</span>
+            </div>
+            <div>
+              <strong>Live</strong>
+              <span>синхронизация</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-card" aria-live="polite">
+          <div class="auth-tabs" role="tablist" aria-label="Авторизация">
+            <button class="tab-button active" data-auth-tab="login" type="button">Вход</button>
+            <button class="tab-button" data-auth-tab="register" type="button">Регистрация</button>
+            <button class="tab-button" data-auth-tab="forgot" type="button">Забыли пароль</button>
+          </div>
+
+          <form class="auth-form active" id="loginForm" data-auth-form="login">
+            <div class="form-heading">
+              <h2>Войти</h2>
+              <p>После входа откроется рабочая панель с тремя полями.</p>
+            </div>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" autocomplete="email" value="creator@example.com" required />
+            </label>
+            <label>
+              <span>Пароль</span>
+              <input name="password" type="password" autocomplete="current-password" value="demo1234" required />
+            </label>
+            <button class="primary-button" type="submit">Войти в кабинет</button>
+          </form>
+
+          <form class="auth-form" id="registerForm" data-auth-form="register">
+            <div class="form-heading">
+              <h2>Создать аккаунт</h2>
+              <p>Добавьте данные владельца и название рабочей команды.</p>
+            </div>
+            <label>
+              <span>Имя</span>
+              <input name="name" type="text" autocomplete="name" placeholder="Анна Маркова" required />
+            </label>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" autocomplete="email" placeholder="you@company.ru" required />
+            </label>
+            <label>
+              <span>Пароль</span>
+              <input name="password" type="password" autocomplete="new-password" placeholder="Минимум 8 символов" required />
+            </label>
+            <button class="primary-button" type="submit">Зарегистрироваться</button>
+          </form>
+
+          <form class="auth-form" id="forgotForm" data-auth-form="forgot">
+            <div class="form-heading">
+              <h2>Восстановить доступ</h2>
+              <p>Отправим ссылку для сброса пароля на указанную почту.</p>
+            </div>
+            <label>
+              <span>Email</span>
+              <input name="email" type="email" autocomplete="email" placeholder="you@company.ru" required />
+            </label>
+            <button class="primary-button" type="submit">Отправить ссылку</button>
+            <p class="form-note" id="forgotNote"></p>
+          </form>
+        </div>
+      </section>
+
+      <section class="dashboard-view hidden" id="dashboardView">
+        <aside class="sidebar">
+          <div class="sidebar-brand">
+            <div class="mini-mark" aria-hidden="true"></div>
+            <span>RelayPost</span>
+          </div>
+          <nav class="nav-list" aria-label="Основные разделы">
+            <button class="nav-button active" data-section="compose" type="button">
+              <span class="icon" aria-hidden="true">✎</span>
+              Посты
+            </button>
+            <button class="nav-button" data-section="profile" type="button">
+              <span class="icon" aria-hidden="true">◎</span>
+              Профиль
+            </button>
+          </nav>
+          <button class="ghost-button logout-button" id="logoutButton" type="button">Выйти</button>
+        </aside>
+
+        <div class="dashboard-main">
+          <header class="topbar">
+            <div>
+              <p class="eyebrow">Рабочая панель</p>
+              <h2 id="sectionTitle">Дублирование текста</h2>
+            </div>
+            <div class="user-chip">
+              <span id="userInitial">C</span>
+              <div>
+                <strong id="userName">Creator</strong>
+                <small>Контент-менеджер</small>
+              </div>
+            </div>
+          </header>
+
+          <section class="content-section active" id="composeSection">
+            <div class="three-fields" aria-label="Три основных поля после входа">
+              <label>
+                <span>Проект</span>
+                <input id="projectName" type="text" value="Весенняя кампания" />
+              </label>
+              <label>
+                <span>Дата публикации</span>
+                <input id="publishDate" type="datetime-local" />
+              </label>
+              <label>
+                <span>Группа получателей</span>
+                <select id="recipientGroup">
+                  <option>Все подключенные группы</option>
+                  <option>Только социальные сети</option>
+                  <option>Только мессенджеры</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="composer-layout">
+              <section class="master-editor">
+                <div class="panel-heading">
+                  <div>
+                    <p class="eyebrow">Главный черновик</p>
+                    <h3>Текст для дубляжа</h3>
+                  </div>
+                  <span class="sync-status" id="syncStatus">Синхронизация активна</span>
+                </div>
+                <textarea
+                  id="masterText"
+                  spellcheck="true"
+                  placeholder="Напишите текст поста. Он сразу появится во всех незамороженных приложениях."
+                >Привет! Завтра запускаем новый набор на интенсив. В программе: практика, обратная связь и готовый план продвижения. Подробности в закрепленном посте.</textarea>
+                <div class="composer-actions">
+                  <button class="secondary-button" id="syncAllButton" type="button">Синхронизировать все</button>
+                  <button class="primary-button" id="publishButton" type="button">Отправить в очереди</button>
+                </div>
+              </section>
+
+              <section class="channel-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="eyebrow">Каналы</p>
+                    <h3>Отдельные версии</h3>
+                  </div>
+                  <span class="counter" id="connectedCounter">0 подключено</span>
+                </div>
+                <div class="channel-list" id="channelList"></div>
+              </section>
+            </div>
+          </section>
+
+          <section class="content-section" id="profileSection">
+            <div class="profile-grid">
+              <section class="profile-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="eyebrow">Профиль</p>
+                    <h3>Данные аккаунта</h3>
+                  </div>
+                </div>
+                <label>
+                  <span>Имя</span>
+                  <input id="profileName" type="text" value="Creator" />
+                </label>
+                <label>
+                  <span>Email</span>
+                  <input id="profileEmail" type="email" value="creator@example.com" />
+                </label>
+                <label>
+                  <span>Роль</span>
+                  <select id="profileRole">
+                    <option>Контент-менеджер</option>
+                    <option>SMM-специалист</option>
+                    <option>Администратор</option>
+                  </select>
+                </label>
+              </section>
+
+              <section class="profile-panel">
+                <div class="panel-heading">
+                  <div>
+                    <p class="eyebrow">Интеграции</p>
+                    <h3>Подключенные аккаунты</h3>
+                  </div>
+                </div>
+                <div class="integration-list" id="integrationList"></div>
+              </section>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
