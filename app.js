@@ -1,3 +1,21 @@
+const api = {
+  async login(payload) {
+    return mockRequest({ name: payload.email.split("@")[0] || "Creator", email: payload.email });
+  },
+  async register(payload) {
+    return mockRequest({ name: payload.name || "Creator", email: payload.email });
+  },
+  async forgotPassword(payload) {
+    return mockRequest({ ok: true, email: payload.email });
+  },
+  async saveDraft(payload) {
+    return mockRequest({ ok: true, draft: payload });
+  },
+  async publish(payload) {
+    return mockRequest({ ok: true, queuedChannels: payload.channels });
+  },
+};
+
 const channels = [
   {
     id: "telegram",
@@ -58,6 +76,12 @@ const publishDate = document.querySelector("#publishDate");
 
 const channelTexts = new Map();
 let toastTimer = null;
+
+function mockRequest(data) {
+  return new Promise((resolve) => {
+    window.setTimeout(() => resolve(data), 180);
+  });
+}
 
 function setInitialDate() {
   const date = new Date();
@@ -120,7 +144,7 @@ function renderChannels() {
             </div>
           </div>
           <button class="freeze-button${channel.frozen ? " active" : ""}" type="button" data-freeze="${channel.id}">
-            ${channel.frozen ? "Unfreeze" : "Freeze"}
+            ${channel.frozen ? "Разморозить" : "Заморозить"}
           </button>
         </div>
         <textarea data-channel-text="${channel.id}" spellcheck="true">${channelTexts.get(channel.id)}</textarea>
@@ -172,7 +196,23 @@ function syncUnfrozenChannels() {
   });
 }
 
-function syncAllChannels() {
+function getDraftPayload() {
+  return {
+    projectName: document.querySelector("#projectName").value,
+    publishDate: publishDate.value,
+    recipientGroup: document.querySelector("#recipientGroup").value,
+    masterText: masterText.value,
+    channels: channels
+      .filter((channel) => channel.connected)
+      .map((channel) => ({
+        id: channel.id,
+        frozen: channel.frozen,
+        text: channelTexts.get(channel.id) || masterText.value,
+      })),
+  };
+}
+
+async function syncAllChannels() {
   channels.forEach((channel) => {
     if (channel.connected) {
       channel.frozen = false;
@@ -181,6 +221,7 @@ function syncAllChannels() {
   });
   renderChannels();
   renderIntegrations();
+  await api.saveDraft(getDraftPayload());
   showToast("Все версии снова синхронизируются с главным текстом");
 }
 
@@ -188,23 +229,33 @@ document.querySelectorAll("[data-auth-tab]").forEach((button) => {
   button.addEventListener("click", () => switchAuthTab(button.dataset.authTab));
 });
 
-document.querySelector("#loginForm").addEventListener("submit", (event) => {
+document.querySelector("#loginForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   const form = new FormData(event.currentTarget);
-  const email = form.get("email").toString();
-  enterDashboard(email.split("@")[0] || "Creator", email);
+  const user = await api.login({
+    email: form.get("email").toString(),
+    password: form.get("password").toString(),
+  });
+  enterDashboard(user.name, user.email);
   showToast("Добро пожаловать в RelayPost");
 });
 
-document.querySelector("#registerForm").addEventListener("submit", (event) => {
+document.querySelector("#registerForm").addEventListener("submit", async (event) => {
   event.preventDefault();
   const form = new FormData(event.currentTarget);
-  enterDashboard(form.get("name").toString() || "Creator", form.get("email").toString());
+  const user = await api.register({
+    name: form.get("name").toString(),
+    email: form.get("email").toString(),
+    password: form.get("password").toString(),
+  });
+  enterDashboard(user.name, user.email);
   showToast("Аккаунт создан, можно подключать площадки");
 });
 
-document.querySelector("#forgotForm").addEventListener("submit", (event) => {
+document.querySelector("#forgotForm").addEventListener("submit", async (event) => {
   event.preventDefault();
+  const form = new FormData(event.currentTarget);
+  await api.forgotPassword({ email: form.get("email").toString() });
   document.querySelector("#forgotNote").textContent =
     "Готово. В прототипе письмо не отправляется, но сценарий восстановления показан.";
 });
@@ -283,9 +334,13 @@ integrationList.addEventListener("click", (event) => {
 
 profileName.addEventListener("input", updateUserChip);
 document.querySelector("#syncAllButton").addEventListener("click", syncAllChannels);
-document.querySelector("#publishButton").addEventListener("click", () => {
-  const connected = channels.filter((channel) => channel.connected).map((channel) => channel.name);
-  showToast(`Пост добавлен в очереди: ${connected.join(", ")}`);
+document.querySelector("#publishButton").addEventListener("click", async () => {
+  const payload = getDraftPayload();
+  const result = await api.publish(payload);
+  const channelNames = result.queuedChannels
+    .map((queuedChannel) => channels.find((channel) => channel.id === queuedChannel.id)?.name)
+    .filter(Boolean);
+  showToast(`Пост добавлен в очередь: ${channelNames.join(", ")}`);
 });
 
 setInitialDate();

@@ -10,30 +10,25 @@
     <main class="app-shell">
       <section class="auth-view" id="authView">
         <div class="brand-panel">
-          <div class="brand-mark" aria-hidden="true">
-            <span></span>
-            <span></span>
-            <span></span>
+          <div class="brand-lockup">
+            <div class="brand-mark" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <strong>RelayPost</strong>
           </div>
-          <p class="eyebrow">RelayPost</p>
-          <h1>Один текст для всех ваших групп и каналов</h1>
+          <h1>Пост один. Версий столько, сколько нужно.</h1>
           <p class="brand-copy">
-            Подготовьте пост один раз, заморозьте отдельные приложения и адаптируйте
-            текст под Telegram, VK, MAX и другие площадки.
+            Минимальная панель для подготовки публикаций: общий текст синхронизируется
+            по каналам, а отдельные версии можно заморозить и дописать вручную.
           </p>
-          <div class="brand-stats" aria-label="Преимущества сервиса">
-            <div>
-              <strong>8</strong>
-              <span>каналов</span>
-            </div>
-            <div>
-              <strong>1</strong>
-              <span>черновик</span>
-            </div>
-            <div>
-              <strong>Live</strong>
-              <span>синхронизация</span>
-            </div>
+          <div class="signal-strip" aria-label="Ключевые возможности">
+            <span>Telegram</span>
+            <span>VK</span>
+            <span>MAX</span>
+            <span>WhatsApp</span>
+            <span>Discord</span>
           </div>
         </div>
 
@@ -41,13 +36,13 @@
           <div class="auth-tabs" role="tablist" aria-label="Авторизация">
             <button class="tab-button active" data-auth-tab="login" type="button">Вход</button>
             <button class="tab-button" data-auth-tab="register" type="button">Регистрация</button>
-            <button class="tab-button" data-auth-tab="forgot" type="button">Забыли пароль</button>
+            <button class="tab-button" data-auth-tab="forgot" type="button">Пароль</button>
           </div>
 
           <form class="auth-form active" id="loginForm" data-auth-form="login">
             <div class="form-heading">
-              <h2>Войти</h2>
-              <p>После входа откроется рабочая панель с тремя полями.</p>
+              <p class="eyebrow">Добро пожаловать</p>
+              <h2>Войти в кабинет</h2>
             </div>
             <label>
               <span>Email</span>
@@ -57,13 +52,13 @@
               <span>Пароль</span>
               <input name="password" type="password" autocomplete="current-password" value="demo1234" required />
             </label>
-            <button class="primary-button" type="submit">Войти в кабинет</button>
+            <button class="primary-button" type="submit">Войти</button>
           </form>
 
           <form class="auth-form" id="registerForm" data-auth-form="register">
             <div class="form-heading">
-              <h2>Создать аккаунт</h2>
-              <p>Добавьте данные владельца и название рабочей команды.</p>
+              <p class="eyebrow">Новый аккаунт</p>
+              <h2>Создать профиль</h2>
             </div>
             <label>
               <span>Имя</span>
@@ -82,8 +77,8 @@
 
           <form class="auth-form" id="forgotForm" data-auth-form="forgot">
             <div class="form-heading">
-              <h2>Восстановить доступ</h2>
-              <p>Отправим ссылку для сброса пароля на указанную почту.</p>
+              <p class="eyebrow">Восстановление</p>
+              <h2>Сбросить пароль</h2>
             </div>
             <label>
               <span>Email</span>
@@ -103,11 +98,11 @@
           </div>
           <nav class="nav-list" aria-label="Основные разделы">
             <button class="nav-button active" data-section="compose" type="button">
-              <span class="icon" aria-hidden="true">✎</span>
+              <span class="icon" aria-hidden="true">R</span>
               Посты
             </button>
             <button class="nav-button" data-section="profile" type="button">
-              <span class="icon" aria-hidden="true">◎</span>
+              <span class="icon" aria-hidden="true">P</span>
               Профиль
             </button>
           </nav>
@@ -140,7 +135,7 @@
                 <input id="publishDate" type="datetime-local" />
               </label>
               <label>
-                <span>Группа получателей</span>
+                <span>Получатели</span>
                 <select id="recipientGroup">
                   <option>Все подключенные группы</option>
                   <option>Только социальные сети</option>
@@ -154,26 +149,26 @@
                 <div class="panel-heading">
                   <div>
                     <p class="eyebrow">Главный черновик</p>
-                    <h3>Текст для дубляжа</h3>
+                    <h3>Единый текст</h3>
                   </div>
                   <span class="sync-status" id="syncStatus">Синхронизация активна</span>
                 </div>
                 <textarea
                   id="masterText"
                   spellcheck="true"
-                  placeholder="Напишите текст поста. Он сразу появится во всех незамороженных приложениях."
+                  placeholder="Напишите текст. Он появится во всех незамороженных каналах."
                 >Привет! Завтра запускаем новый набор на интенсив. В программе: практика, обратная связь и готовый план продвижения. Подробности в закрепленном посте.</textarea>
                 <div class="composer-actions">
                   <button class="secondary-button" id="syncAllButton" type="button">Синхронизировать все</button>
-                  <button class="primary-button" id="publishButton" type="button">Отправить в очереди</button>
+                  <button class="primary-button" id="publishButton" type="button">Поставить в очередь</button>
                 </div>
               </section>
 
               <section class="channel-panel">
                 <div class="panel-heading">
                   <div>
-                    <p class="eyebrow">Каналы</p>
-                    <h3>Отдельные версии</h3>
+                    <p class="eyebrow">Версии</p>
+                    <h3>Каналы публикации</h3>
                   </div>
                   <span class="counter" id="connectedCounter">0 подключено</span>
                 </div>
@@ -213,7 +208,7 @@
                 <div class="panel-heading">
                   <div>
                     <p class="eyebrow">Интеграции</p>
-                    <h3>Подключенные аккаунты</h3>
+                    <h3>Соцсети и мессенджеры</h3>
                   </div>
                 </div>
                 <div class="integration-list" id="integrationList"></div>
